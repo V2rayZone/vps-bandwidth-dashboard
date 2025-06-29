@@ -177,7 +177,7 @@ If you need to modify the script:
    ```
 
 2. **Common modifications**:
-   - Change port: Modify `PORT=2053`
+   - Change port: Modify `PORT=5000`
    - Change install directory: Modify `INSTALL_DIR="/opt/v2rayzone-dash"`
    - Add custom vnstat commands
 
@@ -199,7 +199,7 @@ python3 server_local.py
 python server_local.py
 
 # Open browser to:
-# http://localhost:2053
+# http://localhost:5000
 ```
 
 ## ⚠️ Important Notes
@@ -243,7 +243,7 @@ Based on the current script analysis:
 
 - **Install Directory**: `/opt/v2rayzone-dash`
 - **Service Name**: `v2rayzone-dash`
-- **Default Port**: `2053`
+- **Default Port**: `5000`
 - **Dependencies**: `vnstat curl jq net-tools python3 python3-pip`
 - **vnstat Commands**: Updated to use modern format (`vnstat --add -i interface`)
 - **Compatibility**: Works with vnstat 2.x+ (current versions)

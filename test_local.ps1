@@ -3,7 +3,7 @@
 
 param(
     [string]$TestDir = "test_installation",
-    [int]$Port = 2053
+    [int]$Port = 5000
 )
 
 # Configuration

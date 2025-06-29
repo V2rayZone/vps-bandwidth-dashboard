@@ -15,7 +15,7 @@ NC='\033[0m' # No Color
 # Configuration
 INSTALL_DIR="/opt/v2rayzone-dash"
 SERVICE_NAME="v2rayzone-dash"
-PORT=2053
+PORT=5000
 STATS_FILE="$INSTALL_DIR/api/stats.json"
 GENERATE_SCRIPT="$INSTALL_DIR/api/generate_json.sh"
 

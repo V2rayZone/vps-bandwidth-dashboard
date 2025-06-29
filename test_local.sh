@@ -14,7 +14,7 @@ NC='\033[0m' # No Color
 
 # Configuration
 TEST_DIR="./test_installation"
-PORT=2053
+PORT=5000
 
 # Logging function
 log() {

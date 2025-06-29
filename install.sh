@@ -15,7 +15,7 @@ NC='\033[0m' # No Color
 # Configuration
 INSTALL_DIR="/opt/v2rayzone-dash"
 SERVICE_NAME="v2rayzone-dash"
-PORT=2053
+PORT=5000
 GITHUB_REPO="https://raw.githubusercontent.com/V2rayZone/vps-bandwidth-dashboard/main"
 
 # Logging function

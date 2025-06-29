@@ -6,7 +6,7 @@ setlocal enabledelayedexpansion
 
 REM Configuration
 set "TEST_DIR=test_installation"
-set "PORT=2053"
+set "PORT=5000"
 set "GITHUB_URL=https://raw.githubusercontent.com/V2rayZone/vps-bandwidth-dashboard/main/install.sh"
 
 echo.
