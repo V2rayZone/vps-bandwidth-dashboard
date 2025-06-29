@@ -40,22 +40,34 @@ if %errorlevel% neq 0 (
 echo [INFO] Downloaded install.sh successfully
 echo.
 
-echo [INFO] Checking for 'vnstat --create' in the script...
+echo [INFO] Checking for deprecated vnstat commands in the script...
+echo [INFO] Creating backup...
+copy install.sh install.sh.backup >nul
+
+set "CHANGES_MADE=false"
+
 findstr /C:"vnstat --create" install.sh >nul
 if %errorlevel% equ 0 (
     echo [INFO] Found 'vnstat --create' in the script
-    echo [INFO] You should replace it with 'vnstat -u -i eth0' as mentioned
+    echo [INFO] This should be replaced with 'vnstat --add -i'
+    set "CHANGES_MADE=true"
+)
+
+findstr /C:"vnstat -u -i" install.sh >nul
+if %errorlevel% equ 0 (
+    echo [INFO] Found 'vnstat -u -i' in the script (deprecated in vnstat 2.x+)
+    echo [INFO] This should be replaced with 'vnstat --add -i'
+    set "CHANGES_MADE=true"
+)
+
+if "%CHANGES_MADE%"=="true" (
     echo.
-    echo [INFO] Creating backup...
-    copy install.sh install.sh.backup >nul
-    
-    echo [INFO] To modify the script, you can:
+    echo [INFO] To update the script for vnstat 2.x+ compatibility:
     echo   1. Open install.sh in a text editor
-    echo   2. Find 'vnstat --create'
-    echo   3. Replace with 'vnstat -u -i eth0'
+    echo   2. Find 'vnstat --create' and replace with 'vnstat --add -i'
+    echo   3. Find 'vnstat -u -i' and replace with 'vnstat --add -i'
 ) else (
-    echo [INFO] No 'vnstat --create' found in the script
-    echo [INFO] The script already uses the correct vnstat commands
+    echo [INFO] No deprecated vnstat commands found in the script
 )
 
 echo.

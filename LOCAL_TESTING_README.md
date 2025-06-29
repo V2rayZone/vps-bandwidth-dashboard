@@ -15,11 +15,12 @@ The V2RayZone Dash installation script from GitHub can be tested locally using t
 
 After examining your current `install.sh` file, here's what we found:
 
-✅ **Good News**: The script already uses the correct vnstat command format!
-- Uses: `vnstat -u -i "$PRIMARY_INTERFACE"`
-- Does NOT use: `vnstat --create`
+⚠️ **Important Update**: The script has been updated for vnstat 2.x+ compatibility!
+- Now uses: `vnstat --add -i "$PRIMARY_INTERFACE"`
+- Previously used: `vnstat -u -i "$PRIMARY_INTERFACE"` (deprecated in vnstat 2.x+)
+- Avoids: `vnstat --create` (older syntax)
 
-The script is already optimized and doesn't need the modification you mentioned.
+The script has been updated to work with modern vnstat versions (2.x+).
 
 ## 🛠️ Testing Options
 
@@ -76,6 +77,32 @@ All testing scripts will download:
 3. **dashboard/index.html** - Dashboard HTML
 4. **dashboard/style.css** - Dashboard styles
 5. **dashboard/script.js** - Dashboard JavaScript
+
+## 🔧 vnstat Version Compatibility
+
+Different versions of vnstat use different commands for creating interface databases:
+
+### vnstat 1.x (Older versions)
+```bash
+vnstat --create -i eth0
+# or
+vnstat -u -i eth0
+```
+
+### vnstat 2.x+ (Current versions)
+```bash
+vnstat --add -i eth0
+```
+
+### How to Check Your vnstat Version
+```bash
+vnstat --version
+```
+
+### Error: "The -u parameter is not supported"
+If you see this error, you're running vnstat 2.x+ and need to use `--add` instead of `-u`.
+
+Our testing scripts automatically detect and fix these compatibility issues.
 
 ## 🧪 Testing Process
 
@@ -218,7 +245,8 @@ Based on the current script analysis:
 - **Service Name**: `v2rayzone-dash`
 - **Default Port**: `2053`
 - **Dependencies**: `vnstat curl jq net-tools python3 python3-pip`
-- **vnstat Commands**: Already uses correct format (`vnstat -u -i interface`)
+- **vnstat Commands**: Updated to use modern format (`vnstat --add -i interface`)
+- **Compatibility**: Works with vnstat 2.x+ (current versions)
 
 ## 🎯 Next Steps
 

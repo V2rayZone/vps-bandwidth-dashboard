@@ -75,29 +75,41 @@ try {
     
     $content = Get-Content "install.sh" -Raw
     
+    # Check for deprecated vnstat commands
+    Write-Info "Checking for deprecated vnstat commands in the script..."
+    
+    # Create backup first
+    Copy-Item "install.sh" "install.sh.backup"
+    Write-Info "Created backup: install.sh.backup"
+    
+    $changesMade = $false
+    $modifiedContent = $content
+    
     # Check for vnstat --create
-    Write-Info "Checking for 'vnstat --create' in the script..."
     if ($content -match "vnstat --create") {
         Write-Info "Found 'vnstat --create' in the script"
-        
-        # Create backup
-        Copy-Item "install.sh" "install.sh.backup"
-        Write-Info "Created backup: install.sh.backup"
-        
-        # Replace vnstat --create with vnstat -u -i eth0
-        $modifiedContent = $content -replace "vnstat --create", "vnstat -u -i eth0"
-        Set-Content "install.sh" $modifiedContent
-        
-        Write-Info "Replaced 'vnstat --create' with 'vnstat -u -i eth0'"
-        
-        # Show differences
-        Write-Info "Changes made:"
+        $modifiedContent = $modifiedContent -replace "vnstat --create", "vnstat --add -i"
         Write-ColorOutput "  - vnstat --create" "Red"
-        Write-ColorOutput "  + vnstat -u -i eth0" "Green"
+        Write-ColorOutput "  + vnstat --add -i" "Green"
+        $changesMade = $true
+    }
+    
+    # Check for vnstat -u (deprecated in vnstat 2.x+)
+    if ($content -match "vnstat -u -i") {
+        Write-Info "Found 'vnstat -u -i' in the script (deprecated in vnstat 2.x+)"
+        $modifiedContent = $modifiedContent -replace "vnstat -u -i", "vnstat --add -i"
+        Write-ColorOutput "  - vnstat -u -i" "Red"
+        Write-ColorOutput "  + vnstat --add -i" "Green"
+        $changesMade = $true
+    }
+    
+    # Save changes if any were made
+    if ($changesMade) {
+        Set-Content "install.sh" $modifiedContent
+        Write-Info "Updated vnstat commands for compatibility with vnstat 2.x+"
     }
     else {
-        Write-Info "No 'vnstat --create' found in the script"
-        Write-Info "The script already uses the correct vnstat commands"
+        Write-Info "No deprecated vnstat commands found in the script"
     }
     
     Write-ColorOutput "`n================================================================" "Cyan"

@@ -71,22 +71,31 @@ download_github_script() {
 
 # Modify the script as requested
 modify_script() {
-    log "Checking for vnstat --create in the script..."
+    log "Checking for deprecated vnstat commands in the script..."
     
-    # Check if vnstat --create exists in the file
+    # Create backup first
+    cp install.sh install.sh.backup
+    
+    local changes_made=false
+    
+    # Check for vnstat --create and replace
     if grep -q "vnstat --create" install.sh; then
-        log "Found 'vnstat --create' - replacing with 'vnstat -u -i eth0'"
-        
-        # Create backup
-        cp install.sh install.sh.backup
-        
-        # Replace vnstat --create with vnstat -u -i eth0
-        sed -i 's/vnstat --create/vnstat -u -i eth0/g' install.sh
-        
-        log "Replacement completed"
+        log "Found 'vnstat --create' - replacing with 'vnstat --add -i'"
+        sed -i 's/vnstat --create/vnstat --add -i/g' install.sh
+        changes_made=true
+    fi
+    
+    # Check for vnstat -u and replace (deprecated in vnstat 2.x+)
+    if grep -q "vnstat -u" install.sh; then
+        log "Found 'vnstat -u' - replacing with 'vnstat --add'"
+        sed -i 's/vnstat -u -i/vnstat --add -i/g' install.sh
+        changes_made=true
+    fi
+    
+    if [ "$changes_made" = true ]; then
+        log "Vnstat commands updated for compatibility with vnstat 2.x+"
     else
-        log "No 'vnstat --create' found in the script"
-        log "The script already uses the correct vnstat commands"
+        log "No deprecated vnstat commands found in the script"
     fi
 }
 
