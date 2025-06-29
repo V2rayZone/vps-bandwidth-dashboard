@@ -80,8 +80,13 @@ install_dependencies() {
     # Force vnstat to create database for primary interface
     PRIMARY_INTERFACE=$(ip route | grep default | awk '{print $5}' | head -n1)
     if [[ -n "$PRIMARY_INTERFACE" ]]; then
-        vnstat --add -i "$PRIMARY_INTERFACE"
-        log "Initialized vnstat for interface: $PRIMARY_INTERFACE"
+        # Check if interface already exists in vnstat database
+        if ! vnstat -i "$PRIMARY_INTERFACE" --json >/dev/null 2>&1; then
+            vnstat --add -i "$PRIMARY_INTERFACE"
+            log "Initialized vnstat for interface: $PRIMARY_INTERFACE"
+        else
+            log "Interface $PRIMARY_INTERFACE already exists in vnstat database"
+        fi
     fi
 }
 

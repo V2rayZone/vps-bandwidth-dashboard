@@ -103,10 +103,28 @@ try {
         $changesMade = $true
     }
     
+    # Add error handling for existing interfaces
+    if (($modifiedContent -match "vnstat --add -i") -and ($modifiedContent -notmatch "vnstat -i.*--json")) {
+        Write-Info "Adding error handling for existing vnstat interfaces"
+        $errorHandlingPattern = 'vnstat --add -i "\$PRIMARY_INTERFACE"'
+        $replacement = @'
+        # Check if interface already exists in vnstat database
+        if ! vnstat -i "$PRIMARY_INTERFACE" --json >/dev/null 2>&1; then
+            vnstat --add -i "$PRIMARY_INTERFACE"
+            log "Initialized vnstat for interface: $PRIMARY_INTERFACE"
+        else
+            log "Interface $PRIMARY_INTERFACE already exists in vnstat database"
+        fi
+'@
+        $modifiedContent = $modifiedContent -replace [regex]::Escape($errorHandlingPattern), $replacement
+        Write-ColorOutput "  + Added error handling for existing interfaces" "Green"
+        $changesMade = $true
+    }
+    
     # Save changes if any were made
     if ($changesMade) {
         Set-Content "install.sh" $modifiedContent
-        Write-Info "Updated vnstat commands for compatibility with vnstat 2.x+"
+        Write-Info "Updated vnstat commands for compatibility and error handling"
     }
     else {
         Write-Info "No deprecated vnstat commands found in the script"

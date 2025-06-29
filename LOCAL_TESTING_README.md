@@ -245,7 +245,8 @@ Based on the current script analysis:
 - **Service Name**: `v2rayzone-dash`
 - **Default Port**: `5000`
 - **Dependencies**: `vnstat curl jq net-tools python3 python3-pip`
-- **vnstat Commands**: Updated to use modern format (`vnstat --add -i interface`)
+- **vnstat Commands**: Updated to use modern format (`vnstat --add -i interface`) with error handling
+- **Error Handling**: Prevents "Interface already exists" errors during repeated installations
 - **Compatibility**: Works with vnstat 2.x+ (current versions)
 
 ## 🎯 Next Steps

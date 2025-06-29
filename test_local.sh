@@ -92,8 +92,22 @@ modify_script() {
         changes_made=true
     fi
     
+    # Add error handling for existing interfaces
+    if grep -q "vnstat --add -i" install.sh && ! grep -q "vnstat -i.*--json" install.sh; then
+        log "Adding error handling for existing vnstat interfaces"
+        # Replace the vnstat --add command with error handling
+        sed -i '/vnstat --add -i "\$PRIMARY_INTERFACE"/{
+            i\        # Check if interface already exists in vnstat database
+            i\        if ! vnstat -i "$PRIMARY_INTERFACE" --json >/dev/null 2>&1; then
+            a\        else
+            a\            log "Interface $PRIMARY_INTERFACE already exists in vnstat database"
+            a\        fi
+        }' install.sh
+        changes_made=true
+    fi
+    
     if [ "$changes_made" = true ]; then
-        log "Vnstat commands updated for compatibility with vnstat 2.x+"
+        log "Vnstat commands updated for compatibility and error handling"
     else
         log "No deprecated vnstat commands found in the script"
     fi

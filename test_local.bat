@@ -66,6 +66,13 @@ if "%CHANGES_MADE%"=="true" (
     echo   1. Open install.sh in a text editor
     echo   2. Find 'vnstat --create' and replace with 'vnstat --add -i'
     echo   3. Find 'vnstat -u -i' and replace with 'vnstat --add -i'
+    echo   4. Add error handling for existing interfaces:
+    echo      Replace: vnstat --add -i "$PRIMARY_INTERFACE"
+    echo      With: if ! vnstat -i "$PRIMARY_INTERFACE" --json >/dev/null 2>&1; then
+    echo            vnstat --add -i "$PRIMARY_INTERFACE"
+    echo            else
+    echo            log "Interface already exists in vnstat database"
+    echo            fi
 ) else (
     echo [INFO] No deprecated vnstat commands found in the script
 )
